@@ -14,11 +14,11 @@ Since timezones conversions are involved, pytz is a required module and can be f
 Installation
 ------------
 
-     o Modify the notifier.py module to use a valid gmail username/password.  In addition, modify the module
-        to use a valid mobile carrier email address that supports SMPT to SMS.
+     o Modify the notifier.py module to use a valid gmail username/password.  In addition, modify 
+        the module to use a valid mobile carrier email address that supports SMPT to SMS.
 
-     o Install notifier.py module into python by dropping into the appropriate third-party module directory
-        or run directly from a terminal window
+     o Install notifier.py module into python by dropping into the appropriate third-party 
+        module directory or run directly from a terminal window
 
      
 Additional Details
