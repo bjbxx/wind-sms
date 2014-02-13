@@ -1,4 +1,3 @@
-                          Wind SMS Module
 
 What is it?
 -----------
