@@ -11,6 +11,8 @@ Prerequisites
 
 Since timezones conversions are involved, pytz is a required module and can be found here: http://pytz.sourceforge.net/
 
+A valid gmail account is currently required, but this can certainly be modified in notifier.py.
+
 Installation
 ------------
 
