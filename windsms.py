@@ -97,14 +97,16 @@ class StationRunner(object):
         self.noaa_url = "http://www.ndbc.noaa.gov/data/realtime2/" + \
                          station_id + ".cwind"
 
-        # Default last update to the previous hour
-        self.last_update_dt = (datetime.now(tz=timezone('US/Eastern')). \
-                               replace(minute=0, second=0, microsecond=0) \
-                               - timedelta(hours=1))
-
         self.chart_filename = station_id + '_chart.png'
         self.smtp_notify = notifier.SmtpNotifier()
         self.is_continuous = is_cont
+        self.threshold = min_wind
+        self.time_zone = timezone('US/Eastern')
+
+        # Default last update to the previous hour
+        self.last_update_dt = (datetime.now(tz=self.time_zone). \
+                               replace(minute=0, second=0, microsecond=0) \
+                               - timedelta(hours=1))
 
     def sleep_until_next_update(self):
         """Takes last update and sleeps until appropriate next update"""
@@ -118,14 +120,14 @@ class StationRunner(object):
 
             print("Sleep until tomorrow")
 
-            tomorrow = (datetime.now(tz=timezone('US/Eastern')). \
+            tomorrow = (datetime.now(tz=self.time_zone). \
                         replace(hour=8, minute=15, second=0, microsecond=0) \
                         + timedelta(days=1))
 
             # Set last update to the previous hour
             self.last_update_dt = (tomorrow - timedelta(hours=1))
 
-            sleep_amount = tomorrow - datetime.now(tz=timezone('US/Eastern'))
+            sleep_amount = tomorrow - datetime.now(tz=self.time_zone)
             time.sleep(sleep_amount.total_seconds())
 
         else:
@@ -162,7 +164,7 @@ class StationRunner(object):
                                       int(data[4]), \
                                       0, tzinfo=pytz.utc)
 
-                    local_dt = utc_dt.astimezone(timezone('US/Eastern'))
+                    local_dt = utc_dt.astimezone(self.time_zone)
 
                 except ValueError:
                     print("Unable to parse data - Invalid value!")
@@ -234,10 +236,10 @@ class StationRunner(object):
                 cur_wind_dir = data['wind_dir'].pop()
                 cur_wind_speed = data['mph'].pop()
 
-                # If wind speed over 13 - send SMS alert
+                # If wind speed over threshold - send SMS alert
                 print("Current mph: " + cur_wind_speed + " " + cur_wind_dir)
 
-                if float(cur_wind_speed) >= 13:
+                if float(cur_wind_speed) >= self.threshold:
 
                     try:
                         chart_req = urllib.request.urlopen(chart_url)
