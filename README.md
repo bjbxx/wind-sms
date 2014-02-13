@@ -10,7 +10,7 @@ displaying the current wind speed, along with a graphical chart showing the wind
 Prerequisites
 -------------
 
-Since timezones conversions are involved, pytz is a required module and can be installed from here: http://pytz.sourceforge.net/
+Since timezones conversions are involved, pytz is a required module and can be found here: http://pytz.sourceforge.net/
 
 Installation
 ------------
@@ -18,9 +18,8 @@ Installation
      o Modify the notifier.py module to use a valid gmail username/password.  In addition, modify the module to use 
         a valid mobile carrier email address that supports SMPT to SMS.
 
-     o Install notifier.py module into python by dropping into the appropriate third-party module directory or installing via the setup script
-    
-        python setup.py install
+     o Install notifier.py module into python by dropping into the appropriate third-party module directory
+        or run directly from a terminal window
 
      
 Additional Details
