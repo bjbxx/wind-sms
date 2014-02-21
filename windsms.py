@@ -18,8 +18,9 @@ GOOGLE_CHART_API = "http://chart.googleapis.com/chart?chxp=1,0,1,2,3,4,5,6" + \
                    "&chco=EC2416,FF9900&chds=0,35,-1,40&chg=16.66,-1,0,0" + \
                    "&chls=2|3&chma=0,0,0,5&chm=r,18FF2465,0,0.82,0.3&chxl="
 
+_smtp_notifier = notifier.SmtpNotifier()
 
-def get_wind_direction(compass):
+def _get_wind_direction(compass):
     """Converts a float from 0.0-360.0 to a plain english direction"""
 
     direction = ""
@@ -59,7 +60,7 @@ def get_wind_direction(compass):
 
     return direction
 
-def build_google_url(data):
+def _build_google_url(data):
     """Converts data dict from a station runner into a google chart URL"""
 
     google_chart_url = ""
@@ -98,7 +99,6 @@ class StationRunner(object):
                          station_id + ".cwind"
 
         self.chart_filename = station_id + '_chart.png'
-        self.smtp_notify = notifier.SmtpNotifier()
         self.is_continuous = is_cont
         self.threshold = min_wind
         self.time_zone = timezone('US/Eastern')
@@ -183,7 +183,7 @@ class StationRunner(object):
                 # Only record wind direction once every hour
                 if len(mph_list) % 6 == 0:
                     time_list.append(local_dt.strftime('%I'))
-                    dir_list.append(get_wind_direction(float(data[5])))
+                    dir_list.append(_get_wind_direction(float(data[5])))
 
                 # Wind speeds from NOAA are recorded as m/s - convert to MPH
                 mph = round(float(data[6]) * 2.23693, 1)
@@ -228,7 +228,7 @@ class StationRunner(object):
                 # Sleep 5 minutes and try again
                 time.sleep(300)
 
-            chart_url = build_google_url(data)
+            chart_url = _build_google_url(data)
             if chart_url:
 
                 # Get latest wind speed and direction
@@ -251,7 +251,7 @@ class StationRunner(object):
                     except IOError:
                         print("Unable to read/write latest chart data")
 
-                    (self.smtp_notify. \
+                    (_smtp_notifier. \
                      send('Currently ' + cur_wind_speed + \
                           ' mph ' + cur_wind_dir, self.chart_filename))
 
